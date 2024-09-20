@@ -59,7 +59,7 @@ def get_price_group_promo(group_id, page):
 
 def get_data_group():
     
-    df_main = pd.DataFrame(columns=['good_id', 'category', 'subcategory', 'name', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
+    df_main = pd.DataFrame(columns=['good_id', 'category', 'subcategory', 'name', 'link', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
     df_main_promo = pd.DataFrame(columns=['good_id', 'sosedi_promo', 'korona_promo', 'gippo_promo', 'evroopt_promo', 'santa_promo', 'green_promo'])
     #main_group = get_main_group()
     main_group = {'Овощи и фрукты': [3280, [{'GoodsGroupId': 3281, 'GoodsGroupName': 'Овощи и фрукты', 'IsAgeLimit': 0, 'Child': [{'GoodsGroupId': 3282, 'GoodsGroupName': 'Овощи, грибы', 'IsAgeLimit': 0}, {'GoodsGroupId': 3283, 'GoodsGroupName': 'Фрукты, ягоды', 'IsAgeLimit': 0}]}]], 'Алкоголь': [3284, [{'GoodsGroupId': 3285, 'GoodsGroupName': 'Вино, игристые', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3286, 'GoodsGroupName': 'Вино импортное', 'IsAgeLimit': 1}, {'GoodsGroupId': 3287, 'GoodsGroupName': 'Вино плодово-ягодное', 'IsAgeLimit': 1}, {'GoodsGroupId': 3288, 'GoodsGroupName': 'Вино РБ', 'IsAgeLimit': 1}, {'GoodsGroupId': 3289, 'GoodsGroupName': 'Игристые вина, шампанское', 'IsAgeLimit': 1}]}, {'GoodsGroupId': 3290, 'GoodsGroupName': 'Крепкий алкоголь', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3291, 'GoodsGroupName': 'Бренди, коньяк', 'IsAgeLimit': 1}, {'GoodsGroupId': 3293, 'GoodsGroupName': 'Вермут, ликеры, бальзамы, настойки', 'IsAgeLimit': 1}, {'GoodsGroupId': 3292, 'GoodsGroupName': 'Виски, ром, текила, джин, прочее', 'IsAgeLimit': 1}, {'GoodsGroupId': 3518, 'GoodsGroupName': 'Водка', 'IsAgeLimit': 1}]}, {'GoodsGroupId': 3294, 'GoodsGroupName': 'Пиво', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3295, 'GoodsGroupName': 'Пиво в жестяной банке', 'IsAgeLimit': 1}, {'GoodsGroupId': 3297, 'GoodsGroupName': 'Пиво в ПЭТ', 'IsAgeLimit': 1}, {'GoodsGroupId': 3296, 'GoodsGroupName': 'Пиво в стекле', 'IsAgeLimit': 1}]}, {'GoodsGroupId': 3298, 'GoodsGroupName': 'Слабоалкогольные напитки', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3299, 'GoodsGroupName': 'Слабоалкогольные напитки', 'IsAgeLimit': 1}]}]]}
@@ -98,8 +98,9 @@ def get_data_group():
                                 if price_contractor['ContractorId'] == 72526:
                                     green =  price_contractor['Price'] 
                             if any([sosedi, korona, gippo, evroopt, santa, green]):
-                                df_main.loc[len(df_main)] = [goods_id, main_name, goods_group_name, goods_name, sosedi, korona, gippo, evroopt, santa, green]
-            
+                                link = 'https://infoprice.by/?search=' + "+".join(goods_name.split(" "))
+                                df_main.loc[len(df_main)] = [goods_id, main_name, goods_group_name, goods_name, link, sosedi, korona, gippo, evroopt, santa, green]
+                            link = 'https://infoprice.by/?search=' + "+".join(goods_name.split(" "))
             # block with promo price
            
             price_promo = get_price_group_promo(group_id['GoodsGroupId'], "")
@@ -132,6 +133,9 @@ def get_data_group():
                                 df_main_promo.loc[len(df_main_promo)] = [goods_id, sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo]   
 
     result = pd.merge(df_main, df_main_promo, how='left', on='good_id').fillna(0)
+    result = result[['category', 'subcategory', 'name', 'link', 'sosedi', 'sosedi_promo', 'korona', 'korona_promo', 'gippo', 'gippo_promo', 'evroopt', 'evroopt_promo', 'santa', 'santa_promo', 'green', 'green_promo']]
+
+
     result.to_excel('1.xlsx')    
         
                 
