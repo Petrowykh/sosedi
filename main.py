@@ -3,6 +3,8 @@ import requests, json
 
 from api import headers, params
 
+from tqdm import tqdm
+
 def get_main_group():
     data_group = '{"CRC":"","Packet":{"FromId":"10003001","ServerKey":"omt5W465fjwlrtxcEco97kew2dkdrorqqq","Data":{}}}'
     response = requests.post('https://api.infoprice.by/InfoPrice.GoodsGroup', params=params, headers=headers, data=data_group)
@@ -62,15 +64,204 @@ def get_data_group():
     df_main = pd.DataFrame(columns=['good_id', 'category', 'subcategory', 'name', 'link', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
     df_main_promo = pd.DataFrame(columns=['good_id', 'sosedi_promo', 'korona_promo', 'gippo_promo', 'evroopt_promo', 'santa_promo', 'green_promo'])
     #main_group = get_main_group()
-    main_group = {'Овощи и фрукты': [3280, [{'GoodsGroupId': 3281, 'GoodsGroupName': 'Овощи и фрукты', 'IsAgeLimit': 0, 'Child': [{'GoodsGroupId': 3282, 'GoodsGroupName': 'Овощи, грибы', 'IsAgeLimit': 0}, {'GoodsGroupId': 3283, 'GoodsGroupName': 'Фрукты, ягоды', 'IsAgeLimit': 0}]}]], 'Алкоголь': [3284, [{'GoodsGroupId': 3285, 'GoodsGroupName': 'Вино, игристые', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3286, 'GoodsGroupName': 'Вино импортное', 'IsAgeLimit': 1}, {'GoodsGroupId': 3287, 'GoodsGroupName': 'Вино плодово-ягодное', 'IsAgeLimit': 1}, {'GoodsGroupId': 3288, 'GoodsGroupName': 'Вино РБ', 'IsAgeLimit': 1}, {'GoodsGroupId': 3289, 'GoodsGroupName': 'Игристые вина, шампанское', 'IsAgeLimit': 1}]}, {'GoodsGroupId': 3290, 'GoodsGroupName': 'Крепкий алкоголь', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3291, 'GoodsGroupName': 'Бренди, коньяк', 'IsAgeLimit': 1}, {'GoodsGroupId': 3293, 'GoodsGroupName': 'Вермут, ликеры, бальзамы, настойки', 'IsAgeLimit': 1}, {'GoodsGroupId': 3292, 'GoodsGroupName': 'Виски, ром, текила, джин, прочее', 'IsAgeLimit': 1}, {'GoodsGroupId': 3518, 'GoodsGroupName': 'Водка', 'IsAgeLimit': 1}]}, {'GoodsGroupId': 3294, 'GoodsGroupName': 'Пиво', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3295, 'GoodsGroupName': 'Пиво в жестяной банке', 'IsAgeLimit': 1}, {'GoodsGroupId': 3297, 'GoodsGroupName': 'Пиво в ПЭТ', 'IsAgeLimit': 1}, {'GoodsGroupId': 3296, 'GoodsGroupName': 'Пиво в стекле', 'IsAgeLimit': 1}]}, {'GoodsGroupId': 3298, 'GoodsGroupName': 'Слабоалкогольные напитки', 'IsAgeLimit': 1, 'Child': [{'GoodsGroupId': 3299, 'GoodsGroupName': 'Слабоалкогольные напитки', 'IsAgeLimit': 1}]}]]}
+
+
+    main_group = {'Промтовары, сезонные товары и товары для домашних животных': [3476,
+  [{'GoodsGroupId': 3498,
+    'GoodsGroupName': 'Бытовая химия',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3500,
+      'GoodsGroupName': 'Инсектициды и репелленты',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3499,
+      'GoodsGroupName': 'Кондиционеры, ополаскиватели, отбеливатели и прочее',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3501,
+      'GoodsGroupName': 'Мыло хозяйственное',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3527,
+      'GoodsGroupName': 'Освежители воздуха',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3502,
+      'GoodsGroupName': 'Средства для мытья посуды',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3503,
+      'GoodsGroupName': 'Средства для ухода и уборки комнат',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3525,
+      'GoodsGroupName': 'Средства для ухода и уборки кухни',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3526,
+      'GoodsGroupName': 'Средства для ухода, уборки ванной и туалета',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3504,
+      'GoodsGroupName': 'Стиральные порошки (гели, капсулы и прочее)',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3505,
+    'GoodsGroupName': 'Галантерея, обувь, одежда',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3549,
+      'GoodsGroupName': 'Домашний текстиль',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3506,
+      'GoodsGroupName': 'Обувная косметика и сопутствующие товары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3530,
+      'GoodsGroupName': 'Обувь, одежда',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3528,
+      'GoodsGroupName': 'Средства по уходу за одеждой и сопутствующие товары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3548,
+      'GoodsGroupName': 'Сумки, зонты, кошельки, портмоне и прочее',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3614,
+      'GoodsGroupName': 'Часы, аксессуары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3529,
+      'GoodsGroupName': 'Чулочно-носочные изделия',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3561,
+    'GoodsGroupName': 'Досуг и развлечения ',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3562,
+      'GoodsGroupName': 'Досуг и развлечения, настольные игры',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3619,
+      'GoodsGroupName': 'Охота и рыбалка',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3563,
+      'GoodsGroupName': 'Товары для рукоделия',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3532,
+    'GoodsGroupName': 'Канцелярские товары',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3533,
+      'GoodsGroupName': 'Канцелярские товары, школьные принадлежности',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3550,
+      'GoodsGroupName': 'Учебники, книги, журналы и прочее',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3507,
+    'GoodsGroupName': 'Косметика и парфюмерия',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3531,
+      'GoodsGroupName': 'Декоративная косметика, аксессуары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3508,
+      'GoodsGroupName': 'Мыло и средства для интимной гигиены',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3509,
+      'GoodsGroupName': 'Наборы косметические',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3510,
+      'GoodsGroupName': 'Парфюмерия дезодоранты',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3511,
+      'GoodsGroupName': 'Средства для душа и принятия ванны, аксессуары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3512,
+      'GoodsGroupName': 'Средства для ухода за волосами и аксессуары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3513,
+      'GoodsGroupName': 'Средства для/после бритья и депиляции',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3514,
+      'GoodsGroupName': 'Средства по уходу за лицом, телом и аксессуары',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3515,
+      'GoodsGroupName': 'Средства по уходу за полостью рта',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3551,
+    'GoodsGroupName': 'Спортивные товары',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3552,
+      'GoodsGroupName': 'Спортивные товары, туризм',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3479,
+    'GoodsGroupName': 'Средства индивидуальной защиты и медицинские средства',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3480,
+      'GoodsGroupName': 'Контрацептивы, гели-лубриканты',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3481,
+      'GoodsGroupName': 'Средства медицинского назначения',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3482,
+    'GoodsGroupName': 'Товары для гигиены',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3483,
+      'GoodsGroupName': 'Бумажная продукция (салфетки, полотенца, прочее)',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3484,
+      'GoodsGroupName': 'Ватные диски и палочки',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3523,
+      'GoodsGroupName': 'Влажные салфетки',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3485,
+      'GoodsGroupName': 'Подгузники и простыни для взрослых',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3486,
+      'GoodsGroupName': 'Товары женской гигиены',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3487,
+    'GoodsGroupName': 'Товары для домашних животных',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3491,
+      'GoodsGroupName': 'Аксессуары, игрушки, наполнители',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3488,
+      'GoodsGroupName': 'Корма для кошек',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3489,
+      'GoodsGroupName': 'Корма для собак',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3490,
+      'GoodsGroupName': 'Прочие корма',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3557,
+    'GoodsGroupName': 'Товары для праздника ',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3558,
+      'GoodsGroupName': 'Товары для праздника',
+      'IsAgeLimit': 0}]},
+   {'GoodsGroupId': 3492,
+    'GoodsGroupName': 'Хозяйственные товары',
+    'IsAgeLimit': 0,
+    'Child': [{'GoodsGroupId': 3553,
+      'GoodsGroupName': 'Садовый инвентарь ',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3604,
+      'GoodsGroupName': 'Сантехника и аксессуары ',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3497,
+      'GoodsGroupName': 'Товары для дачи, отдых на природе',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3555,
+      'GoodsGroupName': 'Товары для строительства и ремонта ',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3493,
+      'GoodsGroupName': 'Хозяйственные товары для ванной и туалета, аксессуары для сантехники',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3496,
+      'GoodsGroupName': 'Хозяйственные товары для уборки',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3494,
+      'GoodsGroupName': 'Хозяйственные товары и аксессуары для дома',
+      'IsAgeLimit': 0},
+     {'GoodsGroupId': 3495,
+      'GoodsGroupName': 'Хозяйственные товары и аксессуары для кухни',
+      'IsAgeLimit': 0}]}]]}
     for main_name in main_group:
-        
-        for group_id in main_group[main_name][1]:  
+        print(main_name)
+        for group_id in tqdm(main_group[main_name][1]):  
             # block with actual price 
             ################################################################
             price = get_price_group(group_id['GoodsGroupId'], "")
-            for page in range(0, price['Table'][0]['GeneralData'][0]['AmountPages']):
-                print(group_id['GoodsGroupId'], page)
+            print(group_id['GoodsGroupId'])
+            for page in tqdm(range(0, price['Table'][0]['GeneralData'][0]['AmountPages'])):
+                
                 prices_group = get_price_group(group_id['GoodsGroupId'], str(page))
                 for goods in prices_group['Table']:
                     #print(goods, "\n")
@@ -82,21 +273,21 @@ def get_data_group():
                             goods_name = data_good['GoodsName']
                             goods_id = data_good['GoodsId']
                             
-                            sosedi, korona, gippo, evroopt, santa, green = 0, 0, 0, 0, 0, 0
+                            sosedi, korona, gippo, evroopt, santa, green = 0.00, 0.00, 0.00, 0.00, 0.00, 0.00
                             for price_contractor in data_good['Offers']:
                                 #TODO тут проверяем условие
                                 if price_contractor['ContractorId'] == 72494:
-                                    sosedi = price_contractor['Price']
+                                    sosedi = float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72512:
-                                    korona = price_contractor['Price'] 
+                                    korona = float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72511:
-                                    gippo =  price_contractor['Price'] 
+                                    gippo =  float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72517:
-                                    evroopt =  price_contractor['Price'] 
+                                    evroopt = float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72468:
-                                    santa =  price_contractor['Price']
+                                    santa =  float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72526:
-                                    green =  price_contractor['Price'] 
+                                    green =  float(price_contractor['Price'] )
                             if any([sosedi, korona, gippo, evroopt, santa, green]):
                                 link = 'https://infoprice.by/?search=' + "+".join(goods_name.split(" "))
                                 df_main.loc[len(df_main)] = [goods_id, main_name, goods_group_name, goods_name, link, sosedi, korona, gippo, evroopt, santa, green]
@@ -114,21 +305,21 @@ def get_data_group():
                             goods_name = data_good['GoodsName']
                             goods_id = data_good['GoodsId']
                             
-                            sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo = 0, 0, 0, 0, 0, 0
+                            sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo = 0.00, 0.00, 0.00, 0.00, 0.00, 0.00
                             for price_contractor in data_good['Offers']:
                                 #TODO тут проверяем условие
                                 if price_contractor['ContractorId'] == 72494 and price_contractor['IsPromotionalPrice']:
-                                    sosedi_promo = price_contractor['Price']
+                                    sosedi_promo = float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72512 and price_contractor['IsPromotionalPrice']:
-                                    korona_promo = price_contractor['Price'] 
+                                    korona_promo = float(price_contractor['Price']) 
                                 if price_contractor['ContractorId'] == 72511 and price_contractor['IsPromotionalPrice']:
-                                    gippo_promo =  price_contractor['Price'] 
+                                    gippo_promo =  float(price_contractor['Price']) 
                                 if price_contractor['ContractorId'] == 72517 and price_contractor['IsPromotionalPrice']:
-                                    evroopt_promo =  price_contractor['Price'] 
+                                    evroopt_promo = float(price_contractor['Price']) 
                                 if price_contractor['ContractorId'] == 72468 and price_contractor['IsPromotionalPrice']:
-                                    santa_promo =  price_contractor['Price']
+                                    santa_promo = float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72526 and price_contractor['IsPromotionalPrice']:
-                                    green_promo =  price_contractor['Price'] 
+                                    green_promo = float(price_contractor['Price']) 
                             if any([sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo]):
                                 df_main_promo.loc[len(df_main_promo)] = [goods_id, sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo]   
 
