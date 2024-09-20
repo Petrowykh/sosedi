@@ -32,9 +32,16 @@ def get_subcategory(main_groups):
 def create_data_group(group_id, page=""):
     first_part ='{"CRC":"","Packet":{"FromId":"10003001","ServerKey":"omt5W465fjwlrtxcEco97kew2dkdrorqqq","Data":{"ContractorId":"","GoodsGroupId":"'
     second_part = '","Page":"'
-    third_part = '","Search":"","OrderBy":0,"OrderByContractor":0,"CompareСontractorId":72631,"CatalogType":1,"IsAgeLimit":0,"IsPromotionalPrice":1}}}'
+    third_part = '","Search":"","OrderBy":0,"OrderByContractor":0,"CompareСontractorId":72631,"CatalogType":1,"IsAgeLimit":0,"IsPromotionalPrice":0}}}'
     #TODO тут меняем на 0
     return (first_part + str(group_id) + second_part + page + third_part).encode()          
+
+def create_data_group_promo(group_id, page=""):
+    first_part ='{"CRC":"","Packet":{"FromId":"10003001","ServerKey":"omt5W465fjwlrtxcEco97kew2dkdrorqqq","Data":{"ContractorId":"","GoodsGroupId":"'
+    second_part = '","Page":"'
+    third_part = '","Search":"","OrderBy":0,"OrderByContractor":0,"CompareСontractorId":72631,"CatalogType":1,"IsAgeLimit":0,"IsPromotionalPrice":1}}}'
+    #TODO тут меняем на 0
+    return (first_part + str(group_id) + second_part + page + third_part).encode()  
 
 def get_price_group(group_id, page):
     data_price =  create_data_group(group_id, page=page)
@@ -43,26 +50,37 @@ def get_price_group(group_id, page):
     
     return price_group
 
+def get_price_group_promo(group_id, page):
+    data_price =  create_data_group_promo(group_id, page=page)
+    response = requests.post('https://api.infoprice.by/InfoPrice.Goods', params=params, headers=headers, data=data_price)
+    price_group = response.json()
+    
+    return price_group
+
 def get_data_group():
     
-    df_main = pd.DataFrame(columns=['category', 'subcategory', 'good_id', 'name', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
+    df_main = pd.DataFrame(columns=['good_id', 'category', 'subcategory', 'name', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
+    df_main_promo = pd.DataFrame(columns=['good_id', 'sosedi_promo', 'korona_promo', 'gippo_promo', 'evroopt_promo', 'santa_promo', 'green_promo'])
     main_group = get_main_group()
     for main_name in main_group:
-       
-        for group_id in main_group[main_name][1][:5]:  
-            
+        # delete slice
+        for group_id in main_group[main_name][1]:  
+            print('Usual price')
+            print('----------------------------------')
+            # block with actual price 
+            ################################################################
             price = get_price_group(group_id['GoodsGroupId'], "")
-                  
             prices_group = get_price_group(group_id['GoodsGroupId'], str(price['Table'][0]['GeneralData'][0]['AmountPages']))
             for goods in prices_group['Table']:
-                print(goods, "\n")
+                #print(goods, "\n")
                 if (goods['GeneralData'][0]['AmountGoods'] != 0) and ('GoodsOffer' in goods) :
+                    # delete slice
                     for data_good in goods['GoodsOffer']:
                         
                         goods_group_name = data_good['GoodsGroupName']
                         goods_name = data_good['GoodsName']
                         goods_id = data_good['GoodsId']
-                        #print(goods_name)
+                        print(goods_name)
                         sosedi, korona, gippo, evroopt, santa, green = 0, 0, 0, 0, 0, 0
                         for price_contractor in data_good['Offers']:
                             #TODO тут проверяем условие
@@ -79,11 +97,42 @@ def get_data_group():
                             if price_contractor['ContractorId'] == 72526:
                                 green =  price_contractor['Price'] 
                         if any([sosedi, korona, gippo, evroopt, santa, green]):
-                            row = [main_name, goods_group_name, goods_id, goods_name, sosedi, korona, gippo, evroopt, santa, green]
-                            
-                        df_main.loc[len(df_main)] = row
-                
-    df_main.to_excel('1.xlsx')           
+                            df_main.loc[len(df_main)] = [goods_id, main_name, goods_group_name, goods_name, sosedi, korona, gippo, evroopt, santa, green]
+            
+            # block with promo price
+            print('Promo price')
+            print('----------------------------------')
+            price_promo = get_price_group_promo(group_id['GoodsGroupId'], "")
+            prices_group_promo = get_price_group_promo(group_id['GoodsGroupId'], str(price_promo['Table'][0]['GeneralData'][0]['AmountPages']))
+            for goods_promo in prices_group_promo['Table']:
+                #print(goods, "\n")
+                if (goods_promo['GeneralData'][0]['AmountGoods'] != 0) and ('GoodsOffer' in goods_promo) :
+                    # delete slice
+                    for data_good in goods_promo['GoodsOffer']:
+                        goods_name = data_good['GoodsName']
+                        goods_id = data_good['GoodsId']
+                        print(goods_name)
+                        sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo = 0, 0, 0, 0, 0, 0
+                        for price_contractor in data_good['Offers']:
+                            #TODO тут проверяем условие
+                            if price_contractor['ContractorId'] == 72494 and price_contractor['IsPromotionalPrice']:
+                                sosedi_promo = price_contractor['Price']
+                            if price_contractor['ContractorId'] == 72512 and price_contractor['IsPromotionalPrice']:
+                                korona_promo = price_contractor['Price'] 
+                            if price_contractor['ContractorId'] == 72511 and price_contractor['IsPromotionalPrice']:
+                                gippo_promo =  price_contractor['Price'] 
+                            if price_contractor['ContractorId'] == 72517 and price_contractor['IsPromotionalPrice']:
+                                evroopt_promo =  price_contractor['Price'] 
+                            if price_contractor['ContractorId'] == 72468 and price_contractor['IsPromotionalPrice']:
+                                santa_promo =  price_contractor['Price']
+                            if price_contractor['ContractorId'] == 72526 and price_contractor['IsPromotionalPrice']:
+                                green_promo =  price_contractor['Price'] 
+                        if any([sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo]):
+                            df_main_promo.loc[len(df_main_promo)] = [goods_id, sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo]   
+
+    result = pd.merge(df_main, df_main_promo, how='left', on='good_id').fillna(0)
+    result.to_excel('1.xlsx')    
+        
                 
                 
 
