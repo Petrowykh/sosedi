@@ -103,6 +103,6 @@ dmypy.json
 
 # Secret
 api.py
-1.xlsx
+*.xlsx
 
 
