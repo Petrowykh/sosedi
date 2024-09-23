@@ -100,9 +100,9 @@ def get_data_group():
                                     santa =  float(price_contractor['Price'])
                                 if price_contractor['ContractorId'] == 72526:
                                     green =  float(price_contractor['Price'] )
-                            if any([sosedi, korona, gippo, evroopt, santa, green]):
-                                link = 'https://infoprice.by/?search=' + "+".join(goods_name.split(" "))
-                                df_main.loc[len(df_main)] = (goods_id, main_name, goods_group_name, goods_name, link, sosedi, korona, gippo, evroopt, santa, green)
+                            #if any([sosedi, korona, gippo, evroopt, santa, green]):
+                            link = 'https://infoprice.by/?search=' + "+".join(goods_name.split(" "))
+                            df_main.loc[len(df_main)] = (goods_id, main_name, goods_group_name, goods_name, link, sosedi, korona, gippo, evroopt, santa, green)
                           
             # block with promo price
            
