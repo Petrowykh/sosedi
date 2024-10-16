@@ -150,8 +150,8 @@ def get_data_group():
             # block with promo price
            
             price_promo = get_price_group_promo(group_id['GoodsGroupId'], "")
-            for page_promo in range(0, price_promo['Table'][0]['GeneralData'][0]['AmountPages']):
-                prices_group_promo = get_price_group_promo(group_id['GoodsGroupId'], str(page_promo))
+            for page in range(0, price_promo['Table'][0]['GeneralData'][0]['AmountPages']):
+                prices_group_promo = get_price_group_promo(group_id['GoodsGroupId'], str(page))
                 for goods_promo in prices_group_promo['Table']:
                     #print(goods, "\n")
                     if (goods_promo['GeneralData'][0]['AmountGoods'] != 0) and ('GoodsOffer' in goods_promo) :
