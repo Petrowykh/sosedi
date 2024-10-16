@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 
 def load_sku(file_name):
     df = pd.read_excel(file_name)
-    return df[8001:9000]
+    return df[41001:42000]
 
 class ParserInfoAll:
 
@@ -70,7 +70,7 @@ def reports():
             
     result_df = pd.DataFrame.from_dict(result_dict)
     result_df = result_df.fillna(0.0)
-    result_df.to_excel('excel/ready_bc9.xlsx')
+    result_df.to_excel('excel/ready_bc42.xlsx')
     
 if __name__ == '__main__':
     reports()
