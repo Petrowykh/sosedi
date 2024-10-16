@@ -104,5 +104,6 @@ dmypy.json
 # Secret
 api.py
 *.xlsx
+/excel
 
 

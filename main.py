@@ -61,29 +61,29 @@ def get_price_group_promo(group_id, page):
 
 def get_data_group():
     
-    # df_main = pd.DataFrame(columns=['good_id', 'category', 'subcategory', 'name', 'link', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
-    # df_main_promo = pd.DataFrame(columns=['good_id', 'sosedi_promo', 'korona_promo', 'gippo_promo', 'evroopt_promo', 'santa_promo', 'green_promo'])
+    df_main = pd.DataFrame(columns=['good_id', 'category', 'subcategory', 'name', 'link', 'sosedi', 'korona', 'gippo', 'evroopt', 'santa', 'green'])
+    df_main_promo = pd.DataFrame(columns=['good_id', 'sosedi_promo', 'korona_promo', 'gippo_promo', 'evroopt_promo', 'santa_promo', 'green_promo'])
     main_group = get_main_group()
     
-    good_id_main_list = []
-    category_main_list = []
-    subcategory_main_list = []
-    name_main_list = []
-    link_main_list = []
-    sosedi_main_list = []
-    korona_main_list = []
-    gippo_main_list = []
-    evroopt_main_list =[]
-    santa_main_list = []
-    green_main_list = []
+    # good_id_main_list = []
+    # category_main_list = []
+    # subcategory_main_list = []
+    # name_main_list = []
+    # link_main_list = []
+    # sosedi_main_list = []
+    # korona_main_list = []
+    # gippo_main_list = []
+    # evroopt_main_list =[]
+    # santa_main_list = []
+    # green_main_list = []
 
-    good_id_promo_list = []
-    sosedi_promo_list = []
-    korona_promo_list = []
-    gippo_promo_list = []
-    evroopt_promo_list = []
-    santa_promo_list = []
-    green_promo_list = []
+    # good_id_promo_list = []
+    # sosedi_promo_list = []
+    # korona_promo_list = []
+    # gippo_promo_list = []
+    # evroopt_promo_list = []
+    # santa_promo_list = []
+    # green_promo_list = []
 
     for main_name in main_group:
         print(main_name)
@@ -122,28 +122,29 @@ def get_data_group():
                                     green =  float(price_contractor['Price'] )
                             #if any([sosedi, korona, gippo, evroopt, santa, green]):
                             link = 'https://infoprice.by/?search=' + "+".join(goods_name.split(" "))
-                            good_id_main_list.append(goods_id)
-                            category_main_list.append(main_name)
-                            subcategory_main_list.append(goods_group_name)
-                            name_main_list.append(goods_name)
-                            link_main_list.append(link)
-                            sosedi_main_list.append(sosedi)
-                            korona_main_list.append(korona)
-                            gippo_main_list.append(gippo)
-                            evroopt_main_list.append(evroopt)
-                            santa_main_list.append(santa)
-                            green_main_list.append(green)
-                            main_dict = {'goods_id' : good_id_main_list, 
-                                            'main_name' : category_main_list,
-                                            'goods_group_name' : subcategory_main_list,
-                                            'goods_name' : name_main_list,
-                                            'link' : link_main_list,
-                                            'sosedi' : sosedi_main_list,
-                                            'korona' : korona_main_list,
-                                            'gippo' : gippo_main_list,
-                                            'exroopt' : evroopt_main_list,
-                                            'santa' : santa_main_list,
-                                            'green' : green_main_list}
+                            df_main.loc[len(df_main)] = (goods_id, main_name, goods_group_name, goods_name, link, sosedi, korona, gippo, evroopt, santa, green)
+                            # good_id_main_list.append(goods_id)
+                            # category_main_list.append(main_name)
+                            # subcategory_main_list.append(goods_group_name)
+                            # name_main_list.append(goods_name)
+                            # link_main_list.append(link)
+                            # sosedi_main_list.append(sosedi)
+                            # korona_main_list.append(korona)
+                            # gippo_main_list.append(gippo)
+                            # evroopt_main_list.append(evroopt)
+                            # santa_main_list.append(santa)
+                            # green_main_list.append(green)
+                            # main_dict = {'goods_id' : good_id_main_list, 
+                            #                 'main_name' : category_main_list,
+                            #                 'goods_group_name' : subcategory_main_list,
+                            #                 'goods_name' : name_main_list,
+                            #                 'link' : link_main_list,
+                            #                 'sosedi' : sosedi_main_list,
+                            #                 'korona' : korona_main_list,
+                            #                 'gippo' : gippo_main_list,
+                            #                 'exroopt' : evroopt_main_list,
+                            #                 'santa' : santa_main_list,
+                            #                 'green' : green_main_list}
                                 
                           
             # block with promo price
@@ -175,23 +176,24 @@ def get_data_group():
                                 if price_contractor['ContractorId'] == 72526 and price_contractor['IsPromotionalPrice']:
                                     green_promo = float(price_contractor['Price']) 
                             #if any([sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo]):
-                            good_id_promo_list.append(goods_id)
-                            sosedi_promo_list.append(sosedi)
-                            korona_promo_list.append(korona)
-                            gippo_promo_list.append(gippo)
-                            evroopt_promo_list.append(evroopt)
-                            santa_promo_list.append(santa)
-                            green_promo_list.append(green)
-                            promo_dict = {'goods_id' : good_id_promo_list, 
-                                            'sosedi' : sosedi_promo_list,
-                                            'korona' : korona_promo_list,
-                                            'gippo' : gippo_promo_list,
-                                            'exroopt' : evroopt_main_list,
-                                            'santa' : santa_main_list,
-                                            'green' : green_main_list}
+                            df_main_promo.loc[len(df_main_promo)] = (goods_id, sosedi_promo, korona_promo, gippo_promo, evroopt_promo, santa_promo, green_promo)
+                            # good_id_promo_list.append(goods_id)
+                            # sosedi_promo_list.append(sosedi)
+                            # korona_promo_list.append(korona)
+                            # gippo_promo_list.append(gippo)
+                            # evroopt_promo_list.append(evroopt)
+                            # santa_promo_list.append(santa)
+                            # green_promo_list.append(green)
+                            # promo_dict = {'goods_id' : good_id_promo_list, 
+                            #                 'sosedi' : sosedi_promo_list,
+                            #                 'korona' : korona_promo_list,
+                            #                 'gippo' : gippo_promo_list,
+                            #                 'exroopt' : evroopt_main_list,
+                            #                 'santa' : santa_main_list,
+                            #                 'green' : green_main_list}
                                 
-    df_main = pd.DataFrame.from_dict(main_dict)
-    df_main_promo = pd.DataFrame.from_dict(promo_dict)
+    # df_main = pd.DataFrame.from_dict(main_dict)
+    # df_main_promo = pd.DataFrame.from_dict(promo_dict)
     result = pd.merge(df_main, df_main_promo, how='left', on='good_id').fillna(0)
     result = result[['category', 'subcategory', 'name', 'link', 'sosedi', 'sosedi_promo', 'korona', 'korona_promo', 'gippo', 'gippo_promo', 'evroopt', 'evroopt_promo', 'santa', 'santa_promo', 'green', 'green_promo']]
 
