@@ -198,7 +198,7 @@ def get_data_group():
     result = result[['category', 'subcategory', 'name', 'link', 'sosedi', 'sosedi_promo', 'korona', 'korona_promo', 'gippo', 'gippo_promo', 'evroopt', 'evroopt_promo', 'santa', 'santa_promo', 'green', 'green_promo']]
 
 
-    result.to_excel('1.xlsx')    
+    result.to_excel('1_oct.xlsx')    
         
                 
                 

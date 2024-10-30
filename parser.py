@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 
 def load_sku(file_name):
     df = pd.read_excel(file_name)
-    return df[41001:42000]
+    return df[27000:]
 
 class ParserInfoAll:
 
@@ -39,7 +39,7 @@ class ParserInfoAll:
     def get_price(self, html):
 
         self.driver.get(html)
-        time.sleep(2)
+        time.sleep(4)
         
         try:
             name = self.driver.find_element(By.CSS_SELECTOR, 'div.max-height')
@@ -53,24 +53,23 @@ class ParserInfoAll:
 
 def reports():
     print('Начинаем парсинг')
-    
-    sku = load_sku('excel/bc.xlsx').fillna('')
+    goods=0
+    sku = load_sku('excel/bc_new1.xlsx').fillna('')
     result_dict = {'name':[],'barcode':[]}
     infoprice = ParserInfoAll()
     barcodes = sku['barcode']
     for barcode in tqdm(barcodes):
-        if len(str(barcode))<10:
-            continue
-        else:
-            link = 'https://infoprice.by/?search=' + str(int(barcode)) 
-            name = infoprice.get_price(link)
-            if name != 'Нет данных':
-                result_dict['name'].append(name)
-                result_dict['barcode'].append(str(int(barcode)))
+        link = 'https://infoprice.by/?search=' + str(barcode).strip() 
+        name = infoprice.get_price(link)
+        if name != 'Нет данных':
+            goods = goods + 1
+            result_dict['name'].append(name)
+            result_dict['barcode'].append(str(int(barcode)))
+            print(goods)
             
     result_df = pd.DataFrame.from_dict(result_dict)
     result_df = result_df.fillna(0.0)
-    result_df.to_excel('excel/ready_bc42.xlsx')
+    result_df.to_excel('excel/2/ready_bc_30.xlsx')
     
 if __name__ == '__main__':
     reports()
